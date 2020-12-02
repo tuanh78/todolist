@@ -1948,7 +1948,79 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      todo: {
+        name: "",
+        state: false
+      },
+      todolist: [],
+      errors: []
+    };
+  },
+  methods: {
+    createToDo: function createToDo() {
+      var _this = this;
+
+      axios.post("/todolist", {
+        name: this.todo.name,
+        state: this.todo.state
+      }).then(function (response) {
+        _this.todolist.push(response.data.todo);
+      })["catch"](function (error) {
+        _this.errors = error.response.data.errors.name;
+      });
+    },
+    getToDoList: function getToDoList() {
+      var _this2 = this;
+
+      axios.get("/todolist").then(function (response) {
+        _this2.todolist = response.data.todolist;
+      })["catch"](function (error) {
+        _this2.errors = error.response.data.errors.name;
+      });
+    },
+    deleteToDo: function deleteToDo(todo, index) {
+      var _this3 = this;
+
+      axios["delete"]("/todolist/" + todo.id).then(function (response) {
+        console.log(response.data.message);
+
+        _this3.todolist.splice(index, 1);
+      })["catch"](function (error) {
+        _this3.errors = error.response.data.errors.name;
+      });
+    },
+    updateToDo: function updateToDo(todo, index) {}
+  },
+  created: function created() {
+    this.getToDoList();
+  },
   mounted: function mounted() {
     console.log("Component mounted.");
   }
@@ -6396,7 +6468,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".todo[data-v-30436d6f] {\n  padding-top: 5rem;\n}\n.todo__heading[data-v-30436d6f] {\n  font-size: 3rem;\n  text-align: center;\n  font-style: italic;\n  margin-bottom: 2rem;\n}", ""]);
+exports.push([module.i, ".todo[data-v-30436d6f] {\n  padding-top: 5rem;\n}\n.todo-form[data-v-30436d6f] {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 2rem;\n}\n.todo-form__input[data-v-30436d6f] {\n  width: 70%;\n  text-align: center;\n  margin-right: 0.2rem;\n}\n.todo-form__input input[data-v-30436d6f] {\n  width: 100%;\n  padding: 0.5rem 0.5rem;\n}\n.todo-form__btn[data-v-30436d6f] {\n  width: 10%;\n}\n.todo-form__btn button[data-v-30436d6f] {\n  width: 100%;\n  height: 100%;\n}\n.todo__heading[data-v-30436d6f] {\n  font-size: 3rem;\n  text-align: center;\n  font-style: italic;\n  margin-bottom: 2rem;\n}\n.todo .table thead tr th[data-v-30436d6f]:first-child {\n  width: 10%;\n}\n.todo .table thead tr th[data-v-30436d6f]:nth-child(2) {\n  width: 60%;\n}\n.todo .table thead tr th[data-v-30436d6f]:nth-child(3) {\n  width: 10%;\n}\n.todo .table thead tr th[data-v-30436d6f]:last-child {\n  width: 20%;\n}\n.todo .table tbody tr th[data-v-30436d6f]:first-child {\n  width: 10%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:nth-child(2) {\n  width: 60%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:nth-child(3) {\n  width: 10%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:last-child {\n  width: 20%;\n}\n.todo table[data-v-30436d6f] {\n  table-layout: fixed;\n}\n.todo table th[data-v-30436d6f],\n.todo table td[data-v-30436d6f] {\n  overflow: hidden;\n}", ""]);
 
 // exports
 
@@ -38191,64 +38263,147 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { attrs: { id: "app" } }, [
+    _c("div", { staticClass: "container todo" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c("div", { staticClass: "todo-form" }, [
+        _c("div", { staticClass: "todo-form__input" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.todo.name,
+                expression: "todo.name"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: {
+              type: "text",
+              placeholder: "Nhập công việc cần làm của bạn"
+            },
+            domProps: { value: _vm.todo.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.todo, "name", $event.target.value)
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "todo-form__btn" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn btn-outline-primary",
+              on: { click: _vm.createToDo }
+            },
+            [_vm._v("\n                    Thêm\n                ")]
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.errors.length
+        ? _c(
+            "div",
+            { staticClass: "error" },
+            [
+              _vm._l(_vm.errors, function(err, index) {
+                return _c("span", { key: index }, [
+                  _vm._v("\n                " + _vm._s(err) + "\n            ")
+                ])
+              }),
+              _vm._v(" "),
+              _c("hr")
+            ],
+            2
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("table", { staticClass: "table table-striped" }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.todolist, function(todo, index) {
+            return _c("tr", { key: index }, [
+              _c("th", { staticClass: "text-center" }, [
+                _vm._v(_vm._s(todo.id))
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-center" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(todo.name) +
+                    "\n                    "
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-center" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(todo.condition) +
+                    "\n                    "
+                )
+              ]),
+              _vm._v(" "),
+              _c("td", { staticClass: "text-center" }, [
+                _c(
+                  "button",
+                  {
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteToDo(todo, index)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                            Xóa\n                        "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("button", { on: { click: _vm.updateToDo } }, [
+                  _vm._v(
+                    "\n                            Sửa\n                        "
+                  )
+                ])
+              ])
+            ])
+          }),
+          0
+        )
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { attrs: { id: "app" } }, [
-      _c("div", { staticClass: "container todo" }, [
-        _c("h1", { staticClass: "todo__heading" }, [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("ToDoList")])
-        ]),
+    return _c("h1", { staticClass: "todo__heading" }, [
+      _c("a", { attrs: { href: "#" } }, [_vm._v("ToDoList")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "text-center" }, [_vm._v("#")]),
         _vm._v(" "),
-        _c("table", { staticClass: "table table-striped" }, [
-          _c("thead", [
-            _c("tr", [
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("#")]),
-              _vm._v(" "),
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("First")]),
-              _vm._v(" "),
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("Last")]),
-              _vm._v(" "),
-              _c("th", { attrs: { scope: "col" } }, [_vm._v("Handle")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("tbody", [
-            _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [_vm._v("1")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Mark")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Otto")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("@mdo")])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [_vm._v("2")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Jacob")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Thornton")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("@fat")])
-            ]),
-            _vm._v(" "),
-            _c("tr", [
-              _c("th", { attrs: { scope: "row" } }, [_vm._v("3")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("Larry")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("the Bird")]),
-              _vm._v(" "),
-              _c("td", [_vm._v("@twitter")])
-            ])
-          ])
-        ])
+        _c("th", { staticClass: "text-center" }, [_vm._v("Tên công việc")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Trạng thái")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "text-center" }, [_vm._v("Tùy chọn")])
       ])
     ])
   }
