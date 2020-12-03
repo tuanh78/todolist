@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Todo;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class TodoController extends Controller
@@ -87,6 +88,18 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'name' => 'required|min:5'
+        ]);
+
+        $todo = DB::table('todos')
+              ->where('id', $id)
+              ->update(['name' => $request->name,
+                        'condition' => $request->condition]);
+
+        return response([
+            'message' => 'Update ' . $id . 'Thanh cong'
+        ]);
     }
 
     /**
@@ -100,6 +113,10 @@ class TodoController extends Controller
         //
         $todo = Todo::findOrFail($id);
         $todo->delete();
+        DB::statement("ALTER TABLE todos AUTO_INCREMENT = $id;");
+        if (!Todo::find($id)) {
+            DB::statement("ALTER TABLE todos AUTO_INCREMENT = 1;");
+        }
         return response([
             'message' => 'Xoa thanh cong'
         ]);

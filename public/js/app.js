@@ -1972,13 +1972,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      todo: {
-        name: "",
-        state: false
+      newTodo: {
+        name: ""
       },
+      todoSelected: {},
       todolist: [],
       errors: []
     };
@@ -1988,8 +2020,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.post("/todolist", {
-        name: this.todo.name,
-        state: this.todo.state
+        name: this.newTodo.name,
+        state: false
       }).then(function (response) {
         _this.todolist.push(response.data.todo);
       })["catch"](function (error) {
@@ -2001,6 +2033,10 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("/todolist").then(function (response) {
         _this2.todolist = response.data.todolist;
+
+        _this2.todolist.forEach(function (item) {
+          Vue.set(item, "isEdit", false);
+        });
       })["catch"](function (error) {
         _this2.errors = error.response.data.errors.name;
       });
@@ -2016,10 +2052,25 @@ __webpack_require__.r(__webpack_exports__);
         _this3.errors = error.response.data.errors.name;
       });
     },
-    updateToDo: function updateToDo(todo, index) {}
+    updateToDo: function updateToDo(todo, index) {
+      var _this4 = this;
+
+      axios.put("/todolist/" + todo.id, {
+        name: this.todolist[index].name,
+        condition: this.todolist[index].condition
+      }).then(function (response) {
+        console.log(response.data.message);
+        todo.isEdit = false;
+      })["catch"](function (error) {
+        _this4.errors = error.response.data.errors.name;
+        console.log("ERRRR:: ", error.response.data);
+      });
+    },
+    selecteTodo: function selecteTodo(index) {}
   },
   created: function created() {
     this.getToDoList();
+    console.log("created");
   },
   mounted: function mounted() {
     console.log("Component mounted.");
@@ -6468,7 +6519,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".todo[data-v-30436d6f] {\n  padding-top: 5rem;\n}\n.todo-form[data-v-30436d6f] {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 2rem;\n}\n.todo-form__input[data-v-30436d6f] {\n  width: 70%;\n  text-align: center;\n  margin-right: 0.2rem;\n}\n.todo-form__input input[data-v-30436d6f] {\n  width: 100%;\n  padding: 0.5rem 0.5rem;\n}\n.todo-form__btn[data-v-30436d6f] {\n  width: 10%;\n}\n.todo-form__btn button[data-v-30436d6f] {\n  width: 100%;\n  height: 100%;\n}\n.todo__heading[data-v-30436d6f] {\n  font-size: 3rem;\n  text-align: center;\n  font-style: italic;\n  margin-bottom: 2rem;\n}\n.todo .table thead tr th[data-v-30436d6f]:first-child {\n  width: 10%;\n}\n.todo .table thead tr th[data-v-30436d6f]:nth-child(2) {\n  width: 60%;\n}\n.todo .table thead tr th[data-v-30436d6f]:nth-child(3) {\n  width: 10%;\n}\n.todo .table thead tr th[data-v-30436d6f]:last-child {\n  width: 20%;\n}\n.todo .table tbody tr th[data-v-30436d6f]:first-child {\n  width: 10%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:nth-child(2) {\n  width: 60%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:nth-child(3) {\n  width: 10%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:last-child {\n  width: 20%;\n}\n.todo table[data-v-30436d6f] {\n  table-layout: fixed;\n}\n.todo table th[data-v-30436d6f],\n.todo table td[data-v-30436d6f] {\n  overflow: hidden;\n}", ""]);
+exports.push([module.i, ".todo[data-v-30436d6f] {\n  padding-top: 5rem;\n}\n.todo-form[data-v-30436d6f] {\n  display: flex;\n  justify-content: center;\n  margin-bottom: 2rem;\n}\n.todo-form__input[data-v-30436d6f] {\n  width: 70%;\n  text-align: center;\n  margin-right: 0.2rem;\n}\n.todo-form__input input[data-v-30436d6f] {\n  width: 100%;\n  padding: 0.5rem 0.5rem;\n}\n.todo-form__btn[data-v-30436d6f] {\n  width: 10%;\n}\n.todo-form__btn button[data-v-30436d6f] {\n  width: 100%;\n  height: 100%;\n}\n.todo__heading[data-v-30436d6f] {\n  font-size: 3rem;\n  text-align: center;\n  font-style: italic;\n  margin-bottom: 2rem;\n}\n.todo .table td[data-v-30436d6f],\n.todo .table th[data-v-30436d6f] {\n  padding: 0;\n  height: 70px;\n  line-height: 70px;\n}\n.todo .table thead tr th[data-v-30436d6f]:first-child {\n  width: 10%;\n}\n.todo .table thead tr th[data-v-30436d6f]:nth-child(2) {\n  width: 60%;\n}\n.todo .table thead tr th[data-v-30436d6f]:nth-child(3) {\n  width: 10%;\n}\n.todo .table thead tr th[data-v-30436d6f]:last-child {\n  width: 20%;\n}\n.todo .table tbody tr th[data-v-30436d6f]:first-child {\n  width: 10%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:nth-child(3) {\n  width: 10%;\n}\n.todo .table tbody tr td[data-v-30436d6f]:last-child {\n  width: 20%;\n}\n.todo .table tbody tr td:last-child label[data-v-30436d6f] {\n  margin-bottom: 0;\n}\n.todo .table tbody tr td:last-child input[data-v-30436d6f] {\n  display: none;\n}\n.todo .table tbody tr .input-update[data-v-30436d6f] {\n  display: flex;\n  align-items: center;\n  width: 100%;\n}\n.todo .table tbody tr .input-update input[data-v-30436d6f] {\n  width: 100%;\n}\n.todo table[data-v-30436d6f] {\n  table-layout: fixed;\n}\n.todo table th[data-v-30436d6f],\n.todo table td[data-v-30436d6f] {\n  overflow: hidden;\n}", ""]);
 
 // exports
 
@@ -38274,8 +38325,8 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.todo.name,
-                expression: "todo.name"
+                value: _vm.newTodo.name,
+                expression: "newTodo.name"
               }
             ],
             staticClass: "form-control",
@@ -38283,13 +38334,13 @@ var render = function() {
               type: "text",
               placeholder: "Nhập công việc cần làm của bạn"
             },
-            domProps: { value: _vm.todo.name },
+            domProps: { value: _vm.newTodo.name },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.$set(_vm.todo, "name", $event.target.value)
+                _vm.$set(_vm.newTodo, "name", $event.target.value)
               }
             }
           })
@@ -38310,7 +38361,7 @@ var render = function() {
       _vm.errors.length
         ? _c(
             "div",
-            { staticClass: "error" },
+            { staticClass: "alert alert-danger", attrs: { role: "alert" } },
             [
               _vm._l(_vm.errors, function(err, index) {
                 return _c("span", { key: index }, [
@@ -38332,29 +38383,211 @@ var render = function() {
           _vm._l(_vm.todolist, function(todo, index) {
             return _c("tr", { key: index }, [
               _c("th", { staticClass: "text-center" }, [
-                _vm._v(_vm._s(todo.id))
-              ]),
-              _vm._v(" "),
-              _c("td", { staticClass: "text-center" }, [
                 _vm._v(
                   "\n                        " +
-                    _vm._s(todo.name) +
+                    _vm._s(todo.id) +
                     "\n                    "
                 )
               ]),
               _vm._v(" "),
-              _c("td", { staticClass: "text-center" }, [
-                _vm._v(
-                  "\n                        " +
-                    _vm._s(todo.condition) +
-                    "\n                    "
-                )
-              ]),
+              !todo.isEdit
+                ? _c("td", { staticClass: "todo-name" }, [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(todo.name) +
+                        "\n                    "
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              todo.isEdit
+                ? _c("td", { staticClass: "input-update text-center" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: todo.name,
+                          expression: "todo.name"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: { type: "text" },
+                      domProps: { value: todo.name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(todo, "name", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              !todo.isEdit
+                ? _c("td", { staticClass: "text-center" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: todo.condition,
+                          expression: "todo.condition"
+                        }
+                      ],
+                      attrs: { type: "checkbox", disabled: "" },
+                      domProps: {
+                        checked: Array.isArray(todo.condition)
+                          ? _vm._i(todo.condition, null) > -1
+                          : todo.condition
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = todo.condition,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(todo, "condition", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  todo,
+                                  "condition",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(todo, "condition", $$c)
+                          }
+                        }
+                      }
+                    })
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              todo.isEdit
+                ? _c("td", { staticClass: "text-center" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: todo.condition,
+                          expression: "todo.condition"
+                        }
+                      ],
+                      attrs: { type: "checkbox" },
+                      domProps: {
+                        checked: Array.isArray(todo.condition)
+                          ? _vm._i(todo.condition, null) > -1
+                          : todo.condition
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = todo.condition,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                _vm.$set(todo, "condition", $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                _vm.$set(
+                                  todo,
+                                  "condition",
+                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                )
+                            }
+                          } else {
+                            _vm.$set(todo, "condition", $$c)
+                          }
+                        }
+                      }
+                    })
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c("td", { staticClass: "text-center" }, [
+                !todo.isEdit
+                  ? _c("label", { staticClass: "btn btn-outline-secondary" }, [
+                      _vm._v(
+                        "\n                            Sửa\n                            "
+                      ),
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: todo.isEdit,
+                            expression: "todo.isEdit"
+                          }
+                        ],
+                        attrs: { type: "checkbox" },
+                        domProps: {
+                          checked: Array.isArray(todo.isEdit)
+                            ? _vm._i(todo.isEdit, null) > -1
+                            : todo.isEdit
+                        },
+                        on: {
+                          change: function($event) {
+                            var $$a = todo.isEdit,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(todo, "isEdit", $$a.concat([$$v]))
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    todo,
+                                    "isEdit",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(todo, "isEdit", $$c)
+                            }
+                          }
+                        }
+                      })
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                todo.isEdit
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-success",
+                        on: {
+                          click: function($event) {
+                            return _vm.updateToDo(todo, index)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "\n                            Lưu\n                        "
+                        )
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
                 _c(
                   "button",
                   {
+                    staticClass: "btn btn-outline-danger",
                     on: {
                       click: function($event) {
                         return _vm.deleteToDo(todo, index)
@@ -38366,13 +38599,7 @@ var render = function() {
                       "\n                            Xóa\n                        "
                     )
                   ]
-                ),
-                _vm._v(" "),
-                _c("button", { on: { click: _vm.updateToDo } }, [
-                  _vm._v(
-                    "\n                            Sửa\n                        "
-                  )
-                ])
+                )
               ])
             ])
           }),

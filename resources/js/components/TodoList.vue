@@ -10,7 +10,7 @@
                     <input
                         type="text"
                         class="form-control"
-                        v-model="todo.name"
+                        v-model="newTodo.name"
                         placeholder="Nhập công việc cần làm của bạn"
                     />
                 </div>
@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div class="error" v-if="errors.length">
+            <div role="alert" class="alert alert-danger" v-if="errors.length">
                 <span v-for="(err, index) in errors" :key="index">
                     {{ err }}
                 </span>
@@ -40,19 +40,51 @@
                 </thead>
                 <tbody>
                     <tr v-for="(todo, index) in todolist" :key="index">
-                        <th class="text-center">{{ todo.id }}</th>
-                        <td class="text-center">
+                        <th class="text-center">
+                            {{ todo.id }}
+                        </th>
+                        <td class="todo-name" v-if="!todo.isEdit">
                             {{ todo.name }}
                         </td>
-                        <td class="text-center">
-                            {{ todo.condition }}
+                        <td v-if="todo.isEdit" class="input-update text-center">
+                            <input
+                                class="form-control"
+                                type="text"
+                                v-model="todo.name"
+                            />
+                        </td>
+                        <td v-if="!todo.isEdit" class="text-center">
+                            <input
+                                type="checkbox"
+                                v-model="todo.condition"
+                                disabled
+                            />
+                        </td>
+                        <td v-if="todo.isEdit" class="text-center">
+                            <input type="checkbox" v-model="todo.condition" />
                         </td>
                         <td class="text-center">
-                            <button @click="deleteToDo(todo, index)">
-                                Xóa
-                            </button>
-                            <button @click="updateToDo">
+                            <label
+                                class="btn btn-outline-secondary"
+                                v-if="!todo.isEdit"
+                            >
                                 Sửa
+                                <input type="checkbox" v-model="todo.isEdit" />
+                            </label>
+
+                            <button
+                                v-if="todo.isEdit"
+                                class="btn btn-success"
+                                @click="updateToDo(todo, index)"
+                            >
+                                Lưu
+                            </button>
+
+                            <button
+                                class="btn btn-outline-danger"
+                                @click="deleteToDo(todo, index)"
+                            >
+                                Xóa
                             </button>
                         </td>
                     </tr>
@@ -66,10 +98,10 @@
 export default {
     data() {
         return {
-            todo: {
-                name: "",
-                state: false
+            newTodo: {
+                name: ""
             },
+            todoSelected: {},
             todolist: [],
             errors: []
         };
@@ -78,8 +110,8 @@ export default {
         createToDo() {
             axios
                 .post("/todolist", {
-                    name: this.todo.name,
-                    state: this.todo.state
+                    name: this.newTodo.name,
+                    state: false
                 })
                 .then(response => {
                     this.todolist.push(response.data.todo);
@@ -93,6 +125,9 @@ export default {
                 .get("/todolist")
                 .then(response => {
                     this.todolist = response.data.todolist;
+                    this.todolist.forEach(item => {
+                        Vue.set(item, "isEdit", false);
+                    });
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors.name;
@@ -109,10 +144,26 @@ export default {
                     this.errors = error.response.data.errors.name;
                 });
         },
-        updateToDo(todo, index) {}
+        updateToDo(todo, index) {
+            axios
+                .put("/todolist/" + todo.id, {
+                    name: this.todolist[index].name,
+                    condition: this.todolist[index].condition
+                })
+                .then(response => {
+                    console.log(response.data.message);
+                    todo.isEdit = false;
+                })
+                .catch(error => {
+                    this.errors = error.response.data.errors.name;
+                    console.log("ERRRR:: ", error.response.data);
+                });
+        },
+        selecteTodo(index) {}
     },
     created() {
         this.getToDoList();
+        console.log("created");
     },
     mounted() {
         console.log("Component mounted.");
@@ -154,6 +205,12 @@ export default {
     }
 
     .table {
+        td,
+        th {
+            padding: 0;
+            height: 70px;
+            line-height: 70px;
+        }
         thead {
             tr {
                 th:first-child {
@@ -176,14 +233,29 @@ export default {
                 th:first-child {
                     width: 10%;
                 }
-                td:nth-child(2) {
-                    width: 60%;
-                }
+                // td:nth-child(2) {
+                //     width: 60%;
+                // }
                 td:nth-child(3) {
                     width: 10%;
                 }
                 td:last-child {
                     width: 20%;
+                    label {
+                        margin-bottom: 0;
+                    }
+                    input {
+                        display: none;
+                    }
+                }
+
+                .input-update {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    input {
+                        width: 100%;
+                    }
                 }
             }
         }
