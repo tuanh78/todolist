@@ -115,6 +115,7 @@ export default {
                 })
                 .then(response => {
                     this.todolist.push(response.data.todo);
+                    this.newTodo.name = "";
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors.name;

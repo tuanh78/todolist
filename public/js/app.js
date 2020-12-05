@@ -2024,6 +2024,8 @@ __webpack_require__.r(__webpack_exports__);
         state: false
       }).then(function (response) {
         _this.todolist.push(response.data.todo);
+
+        _this.newTodo.name = "";
       })["catch"](function (error) {
         _this.errors = error.response.data.errors.name;
       });
