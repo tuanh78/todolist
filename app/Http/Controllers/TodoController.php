@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ValidationRequest;
 use Illuminate\Http\Request;
 use App\Todo;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
+use App\Rules\CharacterRule;
 
 class TodoController extends Controller
 {
@@ -39,12 +41,9 @@ class TodoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ValidationRequest $request)
     {
         //
-        $this->validate($request, [
-            'name' => 'required|min:5',
-        ]);
 
         $todo = Todo::create([
             'name' => $request->input('name'),
